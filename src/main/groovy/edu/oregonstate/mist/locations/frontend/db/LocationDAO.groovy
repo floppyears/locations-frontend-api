@@ -1,6 +1,9 @@
 package edu.oregonstate.mist.locations.frontend.db
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.elasticsearch.action.get.GetResponse
+import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.joda.time.DateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -16,6 +19,26 @@ class LocationDAO {
 
     LocationDAO(Map<String, String> locationConfiguration) {
         this.locationConfiguration = locationConfiguration
+    }
+    /**
+     * Testing the elasticsearch java API
+     * @param id
+     * @return
+     */
+    String esTest (String id) {
+        TransportClient client = TransportClient.builder().build()
+                .addTransportAddress(new InetSocketTransportAddress(
+                InetAddress.getByName("localhost"), 9300))
+
+        GetResponse response = client.prepareGet(
+                locationConfiguration.get("esIndex"),
+                locationConfiguration.get("estype"),
+                id
+        ).execute().actionGet()
+
+        client.close()
+
+        response.sourceAsString
     }
 
     /**

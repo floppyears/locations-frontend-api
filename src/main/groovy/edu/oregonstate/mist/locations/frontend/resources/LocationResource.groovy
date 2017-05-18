@@ -61,6 +61,13 @@ class LocationResource extends Resource {
 
     @GET
     @Timed
+    @Path('/esapitest/{id: [0-9a-zA-Z]+}')
+    Response esApiTest(@PathParam('id') String id) {
+        ok(locationDAO.esTest(id)).build()
+    }
+
+    @GET
+    @Timed
     Response list(@QueryParam('q') String q,
                   @QueryParam('campus') String campus, @QueryParam('type') String type,
                   @QueryParam('lat') Double lat, @QueryParam('lon') Double lon,
